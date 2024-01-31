@@ -28,7 +28,7 @@ const main = async () => {
   //send ether
   const tx = await wallet.sendTransaction({
     to: account2,
-    from: ethers.utils.parseEther("0.025"), //0.025 ether to WEI
+    value: ethers.utils.parseEther("0.025"), //0.025 ether to WEI
   });
 
   //Wait for transaction to be mined
@@ -37,7 +37,7 @@ const main = async () => {
 
   // Getting the balances of the sender and receiver accounts after the transaction.
   const senderBalanceAfter = await provider.getBalance(account1);
-  const receiverBalance = await provider.getBalance(account2);
+  const receiverBalanceAfter = await provider.getBalance(account2);
 
   // Logging the balances after the transaction in a user-friendly format
   console.log(
