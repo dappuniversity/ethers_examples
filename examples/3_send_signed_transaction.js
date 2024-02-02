@@ -1,34 +1,53 @@
-const { ethers } = require("ethers");
+const ethers = require("ethers");
 
-const INFURA_ID = ''
-const provider = new ethers.providers.JsonRpcProvider(`https://kovan.infura.io/v3/${INFURA_ID}`)
+const provider = new ethers.providers.JsonRpcProvider(
+  "https://sepolia.infura.io/v3/3eaee57df35f4e3e9f41c609cf6d774b"
+);
 
-const account1 = '' // Your account address 1
-const account2 = '' // Your account address 2
+const account1 = "0xecCb2450889B3f68C0cd234FE05420Ef87b0a027"; //sender
+const account2 = "0xD43cA3765c530D697fa2ECe322d2d43d993d0651"; //recepient
+const privateKey1 =
+  "25202a70c90a9d9b1f20d20066b6b67ec95ce231b09f11ef109406a839fc9794"; //sender private key
 
-const privateKey1 = '' // Private key of account 1
-const wallet = new ethers.Wallet(privateKey1, provider)
+//creating a wallet of account 1
+const wallet = new ethers.Wallet(privateKey1, provider);
 
 const main = async () => {
-    const senderBalanceBefore = await provider.getBalance(account1)
-    const recieverBalanceBefore = await provider.getBalance(account2)
+  const senderBalanceBefore = await provider.getBalance(account1);
+  const receiverBalanceBefore = await provider.getBalance(account2);
+  // Logging the balances before the transaction in a user-friendly format.
+  console.log(
+    `\n Sender Balance Before: ${ethers.utils.formatEther(senderBalanceBefore)}`
+  );
+  console.log(
+    `\n Receiver Balance Before: ${ethers.utils.formatEther(
+      receiverBalanceBefore
+    )}`
+  );
 
-    console.log(`\nSender balance before: ${ethers.utils.formatEther(senderBalanceBefore)}`)
-    console.log(`reciever balance before: ${ethers.utils.formatEther(recieverBalanceBefore)}\n`)
+  //send ether
+  const tx = await wallet.sendTransaction({
+    to: account2,
+    value: ethers.utils.parseEther("0.025"), //0.025 ether to WEI
+  });
 
-    const tx = await wallet.sendTransaction({
-        to: account2,
-        value: ethers.utils.parseEther("0.025")
-    })
+  //Wait for transaction to be mined
+  await tx.wait();
+  console.log(tx);
 
-    await tx.wait()
-    console.log(tx)
+  // Getting the balances of the sender and receiver accounts after the transaction.
+  const senderBalanceAfter = await provider.getBalance(account1);
+  const receiverBalanceAfter = await provider.getBalance(account2);
 
-    const senderBalanceAfter = await provider.getBalance(account1)
-    const recieverBalanceAfter = await provider.getBalance(account2)
+  // Logging the balances after the transaction in a user-friendly format
+  console.log(
+    `\n Sender Balance After: ${ethers.utils.formatEther(senderBalanceAfter)}`
+  );
+  console.log(
+    `\n Receiver Balance After: ${ethers.utils.formatEther(
+      receiverBalanceAfter
+    )}`
+  );
+};
 
-    console.log(`\nSender balance after: ${ethers.utils.formatEther(senderBalanceAfter)}`)
-    console.log(`reciever balance after: ${ethers.utils.formatEther(recieverBalanceAfter)}\n`)
-}
-
-main()
+main();

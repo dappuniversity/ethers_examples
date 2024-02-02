@@ -1,40 +1,46 @@
-const { ethers } = require("ethers");
+const { ethers, Wallet } = require("ethers");
 
-const INFURA_ID = ''
-const provider = new ethers.providers.JsonRpcProvider(`https://kovan.infura.io/v3/${INFURA_ID}`)
+const rpovider = new ethers.JsonRpcProvider("");
 
-const account1 = '' // Your account address 1
-const account2 = '' // Your account address 2
+// Defining two Ethereum accounts and their private keys.
+const account1 = ''; // Your account address 1
+const account2 = ''; // Your account address 2
 
-const privateKey1 = '' // Private key of account 1
-const wallet = new ethers.Wallet(privateKey1, provider)
+const privateKey1 = ""; // Private key of account 1
 
+// Creating a wallet using the private key and the previously defined provider.
+const wallet = new ethers.Wallet(privateKey1, provider);
+
+// Defining an ERC20 token's ABI (Application Binary Interface), specifying functions the contract supports.
 const ERC20_ABI = [
-    "function balanceOf(address) view returns (uint)",
-    "function transfer(address to, uint amount) returns (bool)",
+  "function balanceOf(address) view returns (uint)",
+  "function transfer(address to, uint amount) returns (bool)",
 ];
 
-const address = ''
-const contract = new ethers.Contract(address, ERC20_ABI, provider)
+//fining the address of the ERC20 token contract.
+const address = '';
+
+// Creating an instance of the ERC20 token contract using the ABI, address, and provider.
+const contract = new ethers.Contract(address, ERC20_ABI, provider);
 
 const main = async () => {
-    const balance = await contract.balanceOf(account1)
+  const balance = await contract.balanceOf(account1);
 
-    console.log(`\nReading from ${address}\n`)
-    console.log(`Balance of sender: ${balance}\n`)
+  console.log(`\n Reading from ${address}\n`);
+  console.log(`Balance of sender: ${balance}`);
 
-    const contractWithWallet = contract.connect(wallet)
+  const contractWithWallet = await contract.connect(Wallet);
 
-    const tx = await contractWithWallet.transfer(account2, balance)
-    await tx.wait()
+  const tx = await contractWithWallet.transfer(account2, balance);
+  await tx.wait(); //contract mining
 
-    console.log(tx)
+  console.log(tx);
 
-    const balanceOfSender = await contract.balanceOf(account1)
-    const balanceOfReciever = await contract.balanceOf(account2)
+  const balanceOfSender = await contract.balanceOf(account1);
+  const balanceOfReceiver = await contract.balanceOf(account2);
 
-    console.log(`\nBalance of sender: ${balanceOfSender}`)
-    console.log(`Balance of reciever: ${balanceOfReciever}\n`)
-}
+  console.log(`\nBalance of sender: ${balanceOfSender}`);
+  console.log(`Balance of receiver: ${balanceOfReceiver}\n`);
+};
 
-main()
+main();

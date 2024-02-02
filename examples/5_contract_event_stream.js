@@ -22,4 +22,4 @@ const main = async () => {
     console.log(transferEvents)
 }
 
-main()
+main();
