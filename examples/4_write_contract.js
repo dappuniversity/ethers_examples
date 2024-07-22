@@ -34,7 +34,7 @@ const main = async () => {
     const balanceOfReciever = await contract.balanceOf(account2)
 
     console.log(`\nBalance of sender: ${balanceOfSender}`)
-    console.log(`Balance of reciever: ${balanceOfReciever}\n`)
+    console.log(`Balance of receiver: ${balanceOfReciever}\n`)
 }
 
 main()
